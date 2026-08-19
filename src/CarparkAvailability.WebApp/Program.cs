@@ -1,13 +1,19 @@
 using CarparkAvailability.WebApp.Components;
+using CarparkAvailability.WebApp.Services;
+using Microsoft.Extensions.ServiceDiscovery;
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 builder.Services
     .AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddHttpClient<ParkingApiClient>(client =>
+{
+    client.BaseAddress = new Uri("http+https://apiapp");
+}).AddServiceDiscovery();
 
-WebApplication app = builder.Build();
+var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
